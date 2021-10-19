@@ -139,7 +139,7 @@ jobs:
         language: [ "nodejs", "python", "dotnet" ]
     steps:
       - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
       - name: Set up Python ${{ matrix.python-version }}
@@ -192,7 +192,7 @@ jobs:
         go-version: [ 1.16.x ]
     steps:
       - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout Repo
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
       - name: Set up Python ${{ matrix.python-version }}
@@ -308,7 +308,7 @@ jobs:
         run: |
           echo "PULUMI_TEST_SUBSET=${{ matrix.test-subset }}" >> $GITHUB_ENV
       - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
       - name: Set up Python ${{ matrix.python-version }}
@@ -402,7 +402,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
       - name: Set up Python ${{ matrix.python-version }}
@@ -471,7 +471,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go ${{ matrix.go-version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
       - name: Install pulumictl
