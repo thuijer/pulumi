@@ -45,7 +45,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Checkout Repo

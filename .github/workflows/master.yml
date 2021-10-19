@@ -55,7 +55,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Fetch Tags
@@ -94,7 +94,7 @@ jobs:
         run: |
           git fetch --quiet --prune --unshallow --tags
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Configure AWS Credentials
@@ -122,7 +122,7 @@ jobs:
   #      - name: Checkout Repo
   #        uses: actions/checkout@v2
   #      - name: Install pulumictl
-  #        uses: jaxxstorm/action-install-gh-release@v1.2.0
+  #        uses: jaxxstorm/action-install-gh-release@v1.3.0
   #        with:
   #          repo: pulumi/pulumictl
   #      - name: Repository Dispatch
@@ -182,7 +182,7 @@ jobs:
         run: |
           echo "PULUMI_GO_DEP_ROOT=$(dirname $(pwd))" >> $GITHUB_ENV
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Ensure
@@ -244,7 +244,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Fetch Tags
@@ -335,7 +335,7 @@ jobs:
         with:
           path: ./src/github.com/${{ github.repository }}
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Fetch Tags
@@ -372,7 +372,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install pulumictl
-        uses: jaxxstorm/action-install-gh-release@v1.2.0
+        uses: jaxxstorm/action-install-gh-release@v1.3.0
         with:
           repo: pulumi/pulumictl
       - name: Checkout Repo
