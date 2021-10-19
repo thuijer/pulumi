@@ -30,17 +30,32 @@ generate::
 	echo "Generate static assets bundle for docs generator"
 	cd pkg && go generate ./codegen/docs/gen.go
 
+ifeq ($(PULUMI_TEST_COVERAGE_PATH),)
 build:: generate
 	cd pkg && go install -ldflags "-X github.com/pulumi/pulumi/pkg/v3/version.Version=${VERSION}" ${PROJECT}
+
+install:: generate
+	cd pkg && GOBIN=$(PULUMI_BIN) go install -ldflags "-X github.com/pulumi/pulumi/pkg/v3/version.Version=${VERSION}" ${PROJECT}
+else
+build:: build_cover
+
+install:: install_cover
+endif
 
 build_debug:: generate
 	cd pkg && go install -gcflags="all=-N -l" -ldflags "-X github.com/pulumi/pulumi/pkg/v3/version.Version=${VERSION}" ${PROJECT}
 
+build_cover:: generate
+	cd pkg && go test -coverpkg github.com/pulumi/pulumi/pkg/v3/...,github.com/pulumi/pulumi/sdk/v3/... -cover -c -o $(shell go env GOPATH)/bin/pulumi -ldflags "-X github.com/pulumi/pulumi/pkg/v3/version.Version=${VERSION}" ${PROJECT}
+
+install_cover:: build_cover
+	cp $(shell go env GOPATH)/bin/pulumi $(PULUMI_BIN)
+
+build_covmerge::
+	cd pkg && go install ./cmd/covmerge
+
 developer_docs::
 	cd developer-docs && make html
-
-install:: generate
-	cd pkg && GOBIN=$(PULUMI_BIN) go install -ldflags "-X github.com/pulumi/pulumi/pkg/v3/version.Version=${VERSION}" ${PROJECT}
 
 install_all:: install
 
