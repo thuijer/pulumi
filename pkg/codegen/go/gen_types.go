@@ -1,6 +1,8 @@
 package gen
 
 import (
+	"fmt"
+
 	"github.com/pulumi/pulumi/pkg/v3/codegen"
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 )
@@ -9,6 +11,10 @@ type outputType struct {
 	schema.Type
 
 	elementType schema.Type
+}
+
+func (t *outputType) String() string {
+	return fmt.Sprintf("Output<%v>", t.elementType)
 }
 
 type typeDetails struct {
@@ -28,7 +34,7 @@ type genContext struct {
 	inputTypes    map[schema.Type]*schema.InputType
 	outputTypes   map[schema.Type]*outputType
 
-	notedTypes codegen.Set
+	notedTypes codegen.StringSet
 }
 
 func newGenContext(tool string, pulumiPackage *schema.Package, info GoPackageInfo) *genContext {
@@ -40,7 +46,7 @@ func newGenContext(tool string, pulumiPackage *schema.Package, info GoPackageInf
 		resourceTypes: map[string]*schema.ResourceType{},
 		inputTypes:    map[schema.Type]*schema.InputType{},
 		outputTypes:   map[schema.Type]*outputType{},
-		notedTypes:    codegen.Set{},
+		notedTypes:    codegen.StringSet{},
 	}
 }
 
@@ -136,11 +142,11 @@ func (ctx *genContext) resourceType(resource *schema.Resource) *schema.ResourceT
 }
 
 func (ctx *genContext) noteType(t schema.Type) {
-	if ctx.notedTypes.Has(t) {
+	if ctx.notedTypes.Has(t.String()) {
 		return
 	}
 
-	ctx.notedTypes.Add(t)
+	ctx.notedTypes.Add(t.String())
 	switch t := t.(type) {
 	case *outputType:
 		ctx.noteOutputType(t)
@@ -187,8 +193,14 @@ func (ctx *genContext) noteOutputType(t *outputType) {
 }
 
 func (ctx *genContext) noteInputType(t *schema.InputType) {
+	if t, isOptional := t.ElementType.(*schema.OptionalType); isOptional {
+		if pkg := ctx.getPackageForType(t.ElementType); pkg != nil {
+			pkg.detailsForType(t.ElementType).optionalInputType = true
+		}
+	}
+
 	ctx.noteType(t.ElementType)
-	ctx.noteOutputType(ctx.outputType(codegen.ResolvedType(t.ElementType)))
+	ctx.noteType(ctx.outputType(codegen.ResolvedType(t.ElementType)))
 	if representativeType, pkg := ctx.getRepresentativeTypeAndPackage(t); pkg != nil {
 		details := pkg.detailsForType(representativeType)
 		details.inputTypes = append(details.inputTypes, t)
@@ -203,10 +215,6 @@ func (ctx *genContext) noteOptionalType(t *schema.OptionalType) {
 				ElementType: input.ElementType,
 			},
 		})
-
-		pkg := ctx.getPackageForType(input.ElementType)
-		pkg.detailsForType(input.ElementType).optionalInputType = true
-
 		return
 	}
 
@@ -220,6 +228,10 @@ func (ctx *genContext) noteUnionType(t *schema.UnionType) {
 }
 
 func (ctx *genContext) noteObjectType(t *schema.ObjectType) {
+	if !t.IsInputShape() {
+		pkg := ctx.getPackageForType(t)
+		pkg.types = append(pkg.types, t)
+	}
 	ctx.notePropertyTypes(t.Properties)
 }
 
