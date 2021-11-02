@@ -31,6 +31,19 @@ type genContext struct {
 	notedTypes codegen.Set
 }
 
+func newGenContext(tool string, pulumiPackage *schema.Package, info GoPackageInfo) *genContext {
+	return &genContext{
+		tool:          tool,
+		pulumiPackage: pulumiPackage,
+		info:          info,
+		goPackages:    map[string]*pkgContext{},
+		resourceTypes: map[string]*schema.ResourceType{},
+		inputTypes:    map[schema.Type]*schema.InputType{},
+		outputTypes:   map[schema.Type]*outputType{},
+		notedTypes:    codegen.Set{},
+	}
+}
+
 func (ctx *genContext) getPackageForModule(mod string) *pkgContext {
 	p, ok := ctx.goPackages[mod]
 	if !ok {

@@ -2347,16 +2347,7 @@ func (pkg *pkgContext) genResourceModule(w io.Writer) {
 
 // generatePackageContextMap groups resources, types, and functions into Go packages.
 func generatePackageContextMap(tool string, pkg *schema.Package, goInfo GoPackageInfo) map[string]*pkgContext {
-	ctx := &genContext{
-		tool:          tool,
-		pulumiPackage: pkg,
-		info:          goInfo,
-		goPackages:    map[string]*pkgContext{},
-		resourceTypes: map[string]*schema.ResourceType{},
-		outputTypes:   map[schema.Type]*outputType{},
-		notedTypes:    codegen.Set{},
-	}
-
+	ctx := newGenContext(tool, pkg, goInfo)
 	if len(pkg.Config) > 0 {
 		_ = ctx.getPackageForModule("config")
 	}
