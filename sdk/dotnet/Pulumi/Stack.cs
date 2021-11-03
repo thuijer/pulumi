@@ -79,7 +79,7 @@ namespace Pulumi
         /// </summary>
         internal void RegisterPropertyOutputs()
         {
-            var outputs = (from property in this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+            var outputs = (from property in this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
                            let attr = property.GetCustomAttribute<OutputAttribute>()
                            where attr != null
                            let name = attr?.Name ?? property.Name
